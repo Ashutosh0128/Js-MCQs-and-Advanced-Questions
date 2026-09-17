@@ -1,3 +1,66 @@
+/*  1. Write a function deepClone(obj) that returns a deep copy of a nested object without using JSON.parse/JSON.stringify, handling arrays, objects, Date, and null.
+
+
+2. Write a polyfill for Function.prototype.bind that supports partial arguments and works with new keyword invocation.
+
+
+3. Write a debounce(fn, delay) function that preserves this and arguments, and supports a cancel method.
+
+
+4. Write a throttle(fn, interval) function that executes at most once per interval, supporting leading and trailing options.
+
+
+5. Implement a curry function curry(fn) that supports infinite currying and can be invoked with any number of arguments at a time.
+
+
+6. Write a function flattenObject(obj) that converts a nested object into a single-level object with dot-separated keys.
+
+
+7. Implement Promise.all polyfill from scratch that handles non-promise values and rejects on first rejection.
+
+
+8. Write a function memoize(fn) that caches results based on arguments, with support for a custom resolver and cache clearing.
+
+
+9. Implement a simple EventEmitter class with on, off, once, and emit methods that handle multiple listeners.
+
+
+10. Write a function groupBy(array, keyFn) that groups array elements into an object keyed by the result of keyFn.
+
+
+11. Implement a lruCache class with get and put methods with O(1) time complexity and a fixed capacity.
+
+
+12. Write a function retry(fn, retries, delay) that retries a failing async function with exponential backoff.
+
+
+13. Write a custom implementation of Array.prototype.map that mimics native behavior including index and array arguments.
+
+
+14. Write a function that converts a callback-based function into a promise-returning function (promisify).
+
+
+15. Implement a function compose(...fns) and pipe(...fns) that support both left-to-right and right-to-left composition.
+
+
+16. Write a function that finds the longest substring without repeating characters and returns its length.
+
+
+17. Write a function to check if two objects are deeply equal, handling arrays, dates, and circular references.
+
+
+18. Write a function chunk(array, size) that splits an array into groups of a given size, returning an array of arrays.
+
+
+19. Implement a function that returns the nth Fibonacci number using memoization and iterative approaches, and compare performance.
+
+
+20. Write a function that serializes an object into query string parameters and a function that parses a query string back into an object, handling encoding and arrays.
+
+
+*/
+
+
 //1.DeepClone(obj)
 
 function deepClone(obj) {
@@ -19,6 +82,24 @@ function deepClone(obj) {
 
     return cloned;
 }
+
+// example
+
+const original = {
+    name: "Ash",
+    skills: ["JavaScript", "Python"],
+    address: {
+        city: "Mumbai"
+    },
+    dob: new Date()
+};
+
+const copy = deepClone(original);
+
+copy.address.city = "Pune";
+
+console.log(original.address.city); // Mumbai
+console.log(copy.address.city);    // Pune
 
 //2.Pollyfill
 Function.prototype.myBind = function(context, ...boundArgs) {
