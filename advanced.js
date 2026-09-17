@@ -101,6 +101,7 @@ copy.address.city = "Pune";
 console.log(original.address.city); // Mumbai
 console.log(copy.address.city);    // Pune
 
+
 //2.Pollyfill
 Function.prototype.myBind = function(context, ...boundArgs) {
     const fn = this;
@@ -124,9 +125,19 @@ Function.prototype.myBind = function(context, ...boundArgs) {
 };
 
 
+//Example
 
+function greet(greeting, name) {
+    console.log(greeting + " " + name);
+}
 
+const bindObj = {
+    name: "Ash"
+};
 
+const newFunction = greet.myBind(bindObj, "Hello");
+
+newFunction("Ash");
 
 
 
@@ -153,7 +164,16 @@ function debounce(fn, delay) {
     return debounced;
 }
 
+//Example
 
+const search = debounce(function(query) {
+    console.log("API call:", query);
+}, 500);
+
+search("j");
+search("ja");
+search("jav");
+search("java");
 
 
 
@@ -198,6 +218,14 @@ function throttle(fn, interval, options = {}) {
     return throttled;
 }
 
+//Example
+
+const handleScroll = throttle(() => {
+    console.log("Scrolling");
+}, 1000);
+
+window.addEventListener("scroll", handleScroll);
+
 
 
 
@@ -218,7 +246,18 @@ function curry(fn) {
     return curried;
 }
 
+// Example
 
+function add(a, b, c) {
+    return a + b + c;
+}
+
+const curriedAdd = curry(add);
+
+console.log(curriedAdd(1)(2)(3));      // 6
+console.log(curriedAdd(1, 2)(3));      // 6
+console.log(curriedAdd(1)(2, 3));      // 6
+console.log(curriedAdd(1, 2, 3));      // 6
 
 
 
@@ -250,7 +289,19 @@ function flattenObject(obj, prefix = "", result = {}) {
     return result;
 }
 
+// Example
 
+{
+    const obj = {
+        name: "Ash",
+        address: {
+            city: "Mumbai"
+        }
+    };
+
+    console.log(obj);
+}
+console.log(flattenObject(obj));
 
 
 
@@ -284,6 +335,17 @@ function myPromiseAll(iterable) {
     });
 }
 
+// Example
+
+myPromiseAll([
+    Promise.resolve(10),
+    20,
+    Promise.resolve(30)
+])
+.then(result => {
+    console.log(result);
+});
+
 
 
 
@@ -315,7 +377,15 @@ function memoize(fn, resolver) {
     return memoized;
 }
 
+// Example
 
+const slowAdd = memoize((a, b) => {
+    console.log("Calculating...");
+    return a + b;
+});
+
+console.log(slowAdd(10, 20));
+console.log(slowAdd(10, 20));
 
 
 //9. EventEmitter
@@ -365,8 +435,25 @@ class EventEmitter {
 }
 
 
+// Example
 
 
+
+const emitter = new EventEmitter();
+
+function greet(name) {
+    console.log("Hello", name);
+}
+
+emitter.on("greet", greet);
+
+emitter.emit("greet", "Ash");
+// Hello Ash
+
+emitter.off("greet", greet);
+
+emitter.emit("greet", "Ash");
+// Nothing
 
 
 
@@ -390,6 +477,17 @@ function groupBy(array, keyFn) {
     }, {});
 }
 
+// Example
+
+const users = [
+    { name: "A", age: 20 },
+    { name: "B", age: 20 },
+    { name: "C", age: 25 }
+];
+
+const result = groupBy(users, user => user.age);
+
+console.log(result);
 
 
 
@@ -425,6 +523,24 @@ class LRUCache {
     }
 }
 
+
+// Example
+
+const cache = new LRUCache(2);
+
+cache.put("a", 1);
+cache.put("b", 2);
+
+console.log(cache.get("a")); // 1
+
+cache.put("c", 3);
+
+console.log(cache.get("b")); // -1
+console.log(cache.get("c")); // 3
+
+
+
+
 //12. Retry with exponential backoff
 
 function wait(ms) {
@@ -454,7 +570,15 @@ async function retry(fn, retries, delay) {
 }
 
 
+// Example
 
+retry(
+    () => fetch("/api/data"),
+    3,
+    500
+)
+.then(response => console.log(response))
+.catch(error => console.log(error));
 
 
 
@@ -484,6 +608,18 @@ Array.prototype.myMap = function(callback, thisArg) {
     return result;
 };
 
+//Example
+
+
+const numbers = [10, 20, 30];
+
+const result = numbers.myMap(
+    (value, index, array) => {
+        return value + index;
+    }
+);
+
+console.log(result);
 
 
 
@@ -511,11 +647,24 @@ function promisify(fn) {
 }
 
 
+// Example
 
+function divide(a, b, callback) {
+    if (b === 0) {
+        callback(new Error("Cannot divide by zero"));
+        return;
+    }
 
+    callback(null, a / b);
+}
 
+//convert it
 
+const divideAsync = promisify(divide);
 
+divideAsync(10, 2)
+    .then(result => console.log(result))
+    .catch(error => console.log(error));
 
 
 
@@ -542,11 +691,23 @@ function pipe(...fns) {
 }
 
 
+// Example
+
+const double = x => x * 2;
+const square = x => x * x;
+
+const result1 = compose(square, double);
+
+console.log(result1(5));
+// double → square
+// 5 → 10 → 100
 
 
 
+const result2 = pipe(double, square);
 
-
+console.log(result2(5));
+// 5 → 10 → 100
 
 
 
@@ -577,7 +738,16 @@ function longestSubstring(str) {
     return maxLength;
 }
 
+// Example
 
+console.log(longestSubstring("abcabcbb"));
+// 3
+
+console.log(longestSubstring("bbbbb"));
+// 1
+
+console.log(longestSubstring("pwwkew"));
+// 3
 
 
 
@@ -640,7 +810,23 @@ function deepEqual(a, b, visited = new WeakMap()) {
     return true;
 }
 
+// Example
 
+const a = {
+    name: "Ash",
+    address: {
+        city: "Mumbai"
+    }
+};
+
+const b = {
+    name: "Ash",
+    address: {
+        city: "Mumbai"
+    }
+};
+
+console.log(deepEqual(a, b)); // true
 
 
 
@@ -662,8 +848,12 @@ function chunk(array, size) {
 }
 
 
+// Example
 
 
+console.log(
+    chunk([1, 2, 3, 4, 5], 2)
+);
 
 
 
@@ -696,6 +886,8 @@ function fibonacciIterative(n) {
     return b;
 }
 
+console.log(fibonacciIterative(10));
+// 55
 
 
 
@@ -722,8 +914,11 @@ function fibonacciMemo() {
     return fib;
 }
 
+// Example
 const fibonacci = fibonacciMemo();
 
+console.log(fibonacci(10));
+// 55
 
 
 
@@ -755,7 +950,15 @@ function toQueryString(obj) {
     return params.toString();
 }
 
+// Example
 
+const obj = {
+    name: "Ash Patil",
+    age: 22,
+    skills: ["JavaScript", "Python"]
+};
+
+console.log(toQueryString(obj));
 
 
 
@@ -784,4 +987,11 @@ function fromQueryString(query) {
     return result;
 }
 
+
+// Example
+
+const query =
+    "name=Ash+Patil&age=22&skills=JavaScript&skills=Python";
+
+console.log(fromQueryString(query));
 
